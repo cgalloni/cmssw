@@ -13,7 +13,7 @@ pfPileUpForBoostedTaus = boostedTaus.pfPileUp.clone(
     checkClosestZVertex = cms.bool(False)
 )
 pfNoPileUpForBoostedTaus = boostedTaus.pfNoPileUp.clone(
-    topCollection = cms.InputTag('pfPileUpForBoostedTaus'),
+   # topCollection = cms.InputTag('pfPileUpForBoostedTaus'),
     bottomCollection = cms.InputTag('particleFlow')
 )
 
