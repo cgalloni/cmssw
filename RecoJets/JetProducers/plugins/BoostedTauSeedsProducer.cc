@@ -215,8 +215,8 @@ void BoostedTauSeedsProducer::produce(edm::Event& evt, const edm::EventSetup& es
   std::auto_ptr<reco::PFJetCollection> selectedSubjets(new reco::PFJetCollection());
   edm::RefProd<reco::PFJetCollection> selectedSubjetRefProd = evt.getRefBeforePut<reco::PFJetCollection>();
 
-  std::auto_ptr<JetToPFCandidateAssociation> selectedSubjetPFCandidateAssociationForIsolation(new JetToPFCandidateAssociation());
-  std::auto_ptr<JetToPFCandidateAssociation> selectedSubjetPFCandidateAssociationForIsoDepositVetos(new JetToPFCandidateAssociation());
+  std::auto_ptr<JetToPFCandidateAssociation> selectedSubjetPFCandidateAssociationForIsolation(new JetToPFCandidateAssociation(&evt.productGetter()));
+  std::auto_ptr<JetToPFCandidateAssociation> selectedSubjetPFCandidateAssociationForIsoDepositVetos(new JetToPFCandidateAssociation(&evt.productGetter()));
 
   for ( size_t idx = 0; idx < (subjets->size() / 2); ++idx ) {
     const reco::Jet* subjet1 = &subjets->at(2*idx);
