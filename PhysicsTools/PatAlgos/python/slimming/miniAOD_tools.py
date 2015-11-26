@@ -106,27 +106,6 @@ def miniAOD_customizeCommon(process):
 
 
 
-    #Adding  Boosted Subjets taus
-    from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
-    from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
-    process.load("RecoTauTag.Configuration.boostedHPSPFTaus_cff")
-    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-    process.ptau = cms.Path( process.PFTau )
-    process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
-    process.PATTauSequenceBoosted = cloneProcessingSnippet(process,process.PATTauSequence, "Boosted")
-    process.recoTauAK4PFJets08RegionBoosted.src = cms.InputTag('boostedTauSeeds')
-    process.recoTauAK4PFJets08RegionBoosted.pfCandSrc = cms.InputTag('particleFlow')
-    process.recoTauAK4PFJets08RegionBoosted.pfCandAssocMapSrc = cms.InputTag('boostedTauSeeds', 'pfCandAssocMapForIsolation')
-    process.ak4PFJetsLegacyHPSPiZerosBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
-    process.ak4PFJetsRecoTauChargedHadronsBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
-    process.ak4PFJetsRecoTauChargedHadronsBoosted.builders[1].dRcone = cms.double(0.3)
-    process.ak4PFJetsRecoTauChargedHadronsBoosted.builders[1].dRconeLimitedToJetArea = cms.bool(True)
-    process.combinatoricRecoTausBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
-    process.combinatoricRecoTausBoosted.modifiers.remove(process.combinatoricRecoTausBoosted.modifiers[3])
-    # process.combinatoricRecoTausBoosted.builders[0].pfCandSrc = cms.InputTag('pfNoPileUpForBoostedTaus')
-    process.combinatoricRecoTausBoosted.builders[0].pfCandSrc = cms.InputTag('particleFlow')
-    massSearchReplaceAnyInputTag(process.PATTauSequenceBoosted,cms.InputTag("ak4PFJets"),cms.InputTag("boostedTauSeeds"))  
-    process.slimmedTausBoosted = process.slimmedTaus.clone(src = cms.InputTag("selectedPatTausBoosted"))
    
     #noHF pfMET =========
     process.noHFCands = cms.EDFilter("GenericPFCandidateSelector",
@@ -233,7 +212,28 @@ def miniAOD_customizeCommon(process):
     from PhysicsTools.PatAlgos.tools.tauTools import switchToPFTauHPS76xReMiniAOD
     switchToPFTauHPS76xReMiniAOD(process)
     #----------------------------------------------------------------------------
-    
+    #Adding  Boosted Subjets taus
+    from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
+    from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
+    process.load("RecoTauTag.Configuration.boostedHPSPFTaus_cff")
+    #  process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+    process.ptau = cms.Path( process.PFTau )
+    process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
+    process.PATTauSequenceBoosted = cloneProcessingSnippet(process,process.PATTauSequence, "Boosted")
+    process.recoTauAK4PFJets08RegionBoosted.src = cms.InputTag('boostedTauSeeds')
+    process.recoTauAK4PFJets08RegionBoosted.pfCandSrc = cms.InputTag('particleFlow')
+    process.recoTauAK4PFJets08RegionBoosted.pfCandAssocMapSrc = cms.InputTag('boostedTauSeeds', 'pfCandAssocMapForIsolation')
+    process.ak4PFJetsLegacyHPSPiZerosBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
+    process.ak4PFJetsRecoTauChargedHadronsBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
+    process.ak4PFJetsRecoTauChargedHadronsBoosted.builders[1].dRcone = cms.double(0.3)
+    process.ak4PFJetsRecoTauChargedHadronsBoosted.builders[1].dRconeLimitedToJetArea = cms.bool(True)
+    process.combinatoricRecoTausBoosted.jetSrc = cms.InputTag('boostedTauSeeds')
+    process.combinatoricRecoTausBoosted.modifiers.remove(process.combinatoricRecoTausBoosted.modifiers[3])
+    # process.combinatoricRecoTausBoosted.builders[0].pfCandSrc = cms.InputTag('pfNoPileUpForBoostedTaus')
+    process.combinatoricRecoTausBoosted.builders[0].pfCandSrc = cms.InputTag('particleFlow')
+    massSearchReplaceAnyInputTag(process.PATTauSequenceBoosted,cms.InputTag("ak4PFJets"),cms.InputTag("boostedTauSeeds"))  
+    process.slimmedTausBoosted = process.slimmedTaus.clone(src = cms.InputTag("selectedPatTausBoosted"))
+    #----------------------------------------------------------------------------    
     # Adding puppi jets
     process.load('CommonTools.PileupAlgos.Puppi_cff')
     process.load('RecoJets.JetProducers.ak4PFJetsPuppi_cfi')
