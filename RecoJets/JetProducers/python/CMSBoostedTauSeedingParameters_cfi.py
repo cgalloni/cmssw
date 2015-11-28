@@ -5,6 +5,7 @@ import FWCore.ParameterSet.Config as cms
 CMSBoostedTauSeedingParameters = cms.PSet(
     useCMSBoostedTauSeedingAlgorithm = cms.bool(True),
     # subjetPtMin = cms.double(10.0), # minimum subjet pt
+    # subjetEtaMax = cms.double(3), # maximum subjet eta (CG)
     muMin = cms.double(0.0),        # minimum mass drop
     muMax = cms.double(0.667),      # maximum mass drop
     yMin = cms.double(-1.e+6),      # minimum asymmetry

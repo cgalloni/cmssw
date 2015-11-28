@@ -25,14 +25,15 @@ ca8PFJetsCHSprunedForBoostedTaus = boostedTaus2.ak4PFJets.clone(
     boostedTaus3.CMSBoostedTauSeedingParameters,
     #src = cms.InputTag('pfNoPileUpForBoostedTaus'),
     maxDepth = cms.int32(100),
-    jetPtMin = cms.double(50.0),
+    jetPtMin = cms.double(100.0),  
     doAreaFastjet = cms.bool(True),
     nFilt = cms.int32(100),
     rParam = cms.double(0.8),
     jetAlgorithm = cms.string("CambridgeAachen"),
     writeCompound = cms.bool(True),
     jetCollInstanceName = cms.string('subJetsForSeedingBoostedTaus'),
-    subjetPtMin = cms.double(10.0)
+    subjetPtMin = cms.double(10.0),
+    subjetEtaMax = cms.double(3.0)
 )
 
 boostedTauSeeds = cms.EDProducer("BoostedTauSeedsProducer",
