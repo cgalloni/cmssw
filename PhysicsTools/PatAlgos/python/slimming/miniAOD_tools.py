@@ -310,6 +310,7 @@ def miniAOD_customizeOutput(out):
 def miniAOD_customizeData(process):
     from PhysicsTools.PatAlgos.tools.coreTools import runOnData
     runOnData( process, outputModules = [] )
+    runOnData( process, names= ['TausBoosted'] )
 
 def miniAOD_customizeAllData(process):
     miniAOD_customizeCommon(process)
