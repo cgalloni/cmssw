@@ -10,7 +10,7 @@ git cms-addpkg RecoTauTag/Configuration
 scram b -j 8
 git remote add cgalloni https://github.com/cgalloni/cmssw
 git fetch cgalloni
-git checkout -b new_branch  cgalloni/from-CMSSW_9_4_7 
+git checkout -b new_branch  cgalloni/LowPtTaus
 
 ```
 
