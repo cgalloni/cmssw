@@ -13,16 +13,28 @@ def addLowPtTaus(process):
     process.ptau = cms.Path( process.PFTau )
     process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
     process.PATTauSequenceLowPt = cloneProcessingSnippet(process,process.PATTauSequence, "LowPt", addToTask = True)
-    process.recoTauAK4PFJets08RegionLowPt.src = cms.InputTag('LowPtTauSeeds')
+    process.recoTauAK4PFJets08RegionLowPt.src = cms.InputTag('ak8PFJetsLowPt')
     process.recoTauAK4PFJets08RegionLowPt.pfCandSrc = cms.InputTag('particleFlow')
-    process.recoTauAK4PFJets08RegionLowPt.pfCandAssocMapSrc = cms.InputTag('LowPtTauSeeds', 'pfCandAssocMapForIsolation')
+    process.recoTauAK4PFJets08RegionLowPt.pfCandAssocMapSrc = cms.InputTag('ak8PFJetsLowPt', 'pfCandAssocMapForIsolation')
+    process.recoTauAK4PFJets08RegionLowPt.minJetPt = cms.double(1.0)  
     process.selectedPatTausLowPt.cut = cms.string("pt > 1. && tauID(\'decayModeFindingNewDMs\')> 0.5")#tau pt> 1 GeV of threshold output
-    process.ak4PFJetsLegacyHPSPiZerosLowPt.jetSrc = cms.InputTag('LowPtTauSeeds')
+
+    process.ak4PFJetsLegacyHPSPiZerosLowPt.jetSrc = cms.InputTag('ak8PFJetsLowPt')
     process.ak4PFJetsLegacyHPSPiZerosLowPt.minJetPt = cms.double(1) #jet pt> 1 GeV of threshold in input
-    process.ak4PFJetsRecoTauChargedHadronsLowPt.jetSrc = cms.InputTag('LowPtTauSeeds')
-    process.ak4PFJetsRecoTauChargedHadronsLowPt.builders[1].dRcone = cms.double(0.3) # to be checked
-    process.ak4PFJetsRecoTauChargedHadronsLowPt.builders[1].dRconeLimitedToJetArea = cms.bool(True)
-    process.combinatoricRecoTausLowPt.jetSrc = cms.InputTag('LowPtTauSeeds')
+    process.ak4PFJetsRecoTauChargedHadronsLowPt.jetSrc = cms.InputTag('ak8PFJetsLowPt')
+    #process.ak4PFJetsRecoTauChargedHadronsLowPt.builders[1].dRcone = cms.double(0.3) # to be checked
+    #process.ak4PFJetsRecoTauChargedHadronsLowPt.builders[1].dRconeLimitedToJetArea = cms.bool(True)
+
+    process.combinatoricRecoTausLowPt.jetSrc = cms.InputTag('ak8PFJetsLowPt')
+
+# CG Added on 19.02.2019
+    process.ak4PFJetsRecoTauChargedHadronsLowPt.minJetPt = cms.double(1.0)
+#CG possible modification wanted:
+    process.hpsPFTauPrimaryVertexProducerLowPt.cut = cms.string('pt > 18.0 & abs(eta) < 2.4')
+
+
+
+
     _allModifiers = cms.VPSet()
     for modifier in process.combinatoricRecoTausLowPt.modifiers:
         _allModifiers.append(modifier)
@@ -35,8 +47,8 @@ def addLowPtTaus(process):
     ## Note JetArea is not defined for subjets (-> do not switch to True in hpsPFTauDiscriminationByLooseMuonRejection3LowPt, False is default)
     ## The restiction to jetArea is turned to dRMatch=0.1 (-> use explicitly this modified value)
     #process.hpsPFTauDiscriminationByLooseMuonRejection3LowPt.dRmuonMatch = 0.1
-    #process.hpsPFTauDiscriminationByTightMuonRejection3LowPt.dRmuonMatch = 0.1
-    massSearchReplaceAnyInputTag(process.PATTauSequenceLowPt,cms.InputTag("ak4PFJets"),cms.InputTag("LowPtTauSeeds"))  
+    #process.hpsPFTauDiscriminationByTightMuonRejection3LowPt.dRmuonMatch = 0.1  
+    massSearchReplaceAnyInputTag(process.PATTauSequenceLowPt,cms.InputTag("ak4PFJets"),cms.InputTag("ak8PFJetsLowPt"))  
     process.slimmedTausLowPt = process.slimmedTaus.clone(src = cms.InputTag("selectedPatTausLowPt"))
     patAlgosToolsTask.add(process.slimmedTausLowPt)
 

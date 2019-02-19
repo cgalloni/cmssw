@@ -30,18 +30,18 @@ fatjet_ptmin = 1.0
 from RecoJets.JetProducers.ak8PFJets_cfi import ak8PFJets
 
 #ak8CHSJets_lowpt = ak8PFJetsCHS.clone( src = 'chs',jetPtMin = fatjet_ptmin )
-ak8PFJets_lowpt = ak8PFJets.clone( rParam = 0.8, jetPtMin = fatjet_ptmin,    jetCollInstanceName = cms.string('ak8PFJets_lowpt') )
+ak8PFJetsLowPt = ak8PFJets.clone( rParam = 0.8, jetPtMin = fatjet_ptmin,    jetCollInstanceName = cms.string('ak8PFJetsLowPt') )
 
 
-LowPtTauSeeds = cms.EDProducer("LowPtTauSeedsProducer",
-    subjetSrc = cms.InputTag('ak8PFJets_lowpt', 'ak8PFJets_lowpt'),
-    pfCandidateSrc = cms.InputTag('particleFlow'),
-    verbosity = cms.int32(0)
-)
+#LowPtTauSeeds = cms.EDProducer("LowPtTauSeedsProducer",
+#    subjetSrc = cms.InputTag('ak8PFJets_lowpt', 'ak8PFJets_lowpt'),
+#    pfCandidateSrc = cms.InputTag('particleFlow'),
+#    verbosity = cms.int32(0)
+#)
 
 LowPtHPSPFTausTask = cms.Task(
     pfPileUpForLowPtTaus,
     pfNoPileUpForLowPtTaus,
-    ak8PFJets_lowpt,
-    LowPtTauSeeds
+    ak8PFJetsLowPt,
+    #LowPtTauSeeds
 )
