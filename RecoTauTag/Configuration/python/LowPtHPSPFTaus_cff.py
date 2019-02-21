@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 import copy
 
-'''
 
+'''
 Sequences for reconstructing LowPt taus using the HPS algorithm
 
 '''
@@ -20,28 +20,67 @@ pfNoPileUpForLowPtTaus = LowPtTaus.pfNoPileUp.clone(
 
 import RecoJets.JetProducers.ak4PFJets_cfi as LowPtTaus2
 
-
-# reclustering ak8 chs
+# reclustering ak8 
 betapar = cms.double(0.0)
 fatjet_ptmin = 1.0
 
-#from RecoJets.JetProducers.ak5PFJets_cfi import ak5PFJets
 
-from RecoJets.JetProducers.ak8PFJets_cfi import ak8PFJets
+LowPtTauSeeds = LowPtTaus2.ak4PFJets.clone(     
+    doAreaFastjet = cms.bool(True),
+    rParam = cms.double(0.8),
+    jetAlgorithm = cms.string('AntiKt'),
+    jetPtMin =  cms.double(fatjet_ptmin),   
+)
 
-#ak8CHSJets_lowpt = ak8PFJetsCHS.clone( src = 'chs',jetPtMin = fatjet_ptmin )
-ak8PFJetsLowPt = ak8PFJets.clone( rParam = 0.8, jetPtMin = fatjet_ptmin,    jetCollInstanceName = cms.string('ak8PFJetsLowPt') )
 
-
-#LowPtTauSeeds = cms.EDProducer("LowPtTauSeedsProducer",
-#    subjetSrc = cms.InputTag('ak8PFJets_lowpt', 'ak8PFJets_lowpt'),
-#    pfCandidateSrc = cms.InputTag('particleFlow'),
-#    verbosity = cms.int32(0)
-#)
+from Configuration.Eras.Modifier_pp_on_XeXe_2017_cff import pp_on_XeXe_2017
+pp_on_XeXe_2017.toModify(LowPtTauSeeds, inputEtMin = 999999.0)
 
 LowPtHPSPFTausTask = cms.Task(
     pfPileUpForLowPtTaus,
     pfNoPileUpForLowPtTaus,
-    ak8PFJetsLowPt,
-    #LowPtTauSeeds
+    LowPtTauSeeds
 )
+
+'''
+import CommonTools.ParticleFlow.pfNoPileUp_cff as lowptTaus
+pfPileUpForLowptTaus = lowptTaus.pfPileUp.clone(
+    PFCandidates = cms.InputTag('particleFlow'),
+    checkClosestZVertex = cms.bool(False)
+)
+pfNoPileUpForLowptTaus = lowptTaus.pfNoPileUp.clone(
+    topCollection = cms.InputTag('pfPileUpForLowptTaus'),
+    bottomCollection = cms.InputTag('particleFlow')
+)
+
+
+import RecoJets.JetProducers.ak4PFJets_cfi as lowptTaus2
+import RecoJets.JetProducers.CMSBoostedTauSeedingParameters_cfi as lowptTaus3
+ca8PFJetsCHSprunedForLowptTaus = lowptTaus2.ak4PFJets.clone(
+    lowptTaus3.CMSBoostedTauSeedingParameters,
+    #src = cms.InputTag('pfNoPileUpForBoostedTaus'),
+    jetPtMin = cms.double(100.0),
+    doAreaFastjet = cms.bool(True),
+    nFilt = cms.int32(100),
+    rParam = cms.double(0.8),
+    jetAlgorithm = cms.string("CambridgeAachen"),
+    writeCompound = cms.bool(True),
+    jetCollInstanceName = cms.string('subJetsForSeedingLowptTaus')
+)
+
+from Configuration.Eras.Modifier_pp_on_XeXe_2017_cff import pp_on_XeXe_2017
+pp_on_XeXe_2017.toModify(ca8PFJetsCHSprunedForLowptTaus, inputEtMin = 999999.0)
+
+LowPtTauSeeds = cms.EDProducer("BoostedTauSeedsProducer",
+    subjetSrc = cms.InputTag('ca8PFJetsCHSprunedForLowptTaus', 'subJetsForSeedingLowptTaus'),
+    pfCandidateSrc = cms.InputTag('particleFlow'),
+    verbosity = cms.int32(0)
+)
+
+LowPtHPSPFTausTask = cms.Task(
+    pfPileUpForLowptTaus,
+    pfNoPileUpForLowptTaus,
+    ca8PFJetsCHSprunedForLowptTaus,
+    LowPtTauSeeds
+)
+'''
