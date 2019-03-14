@@ -8,6 +8,8 @@ MicroEventContent = cms.PSet(
         'keep *_slimmedElectrons_*_*',
         'keep *_slimmedMuons_*_*',
         'keep *_slimmedTaus_*_*',
+        #'keep *_LowPtTauSeeds_*_*',
+        'keep *_slimmedTausLowPt_*_*',
         'keep *_slimmedTausBoosted_*_*',
         'keep *_slimmedCaloJets_*_*',
         'keep *_slimmedJets_*_*',
